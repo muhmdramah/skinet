@@ -1,4 +1,6 @@
-﻿using Core.Entities;
+﻿using AutoMapper;
+using Core.DTOs;
+using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +13,12 @@ namespace API.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public ProductController(IUnitOfWork unitOfWork)
+        public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -25,7 +29,9 @@ namespace API.Controllers
             if (!products.Any())
                 return NotFound("There's no products right now... Try again later!");
 
-            return Ok(products);
+            var dto = _mapper.Map<List<ProductDto>>(products);
+
+            return Ok(dto);
         }
 
         [HttpGet("{productId:int}")]
@@ -36,14 +42,18 @@ namespace API.Controllers
             if (products is null)
                 return NotFound($"product with id {productId} was not found!");
 
+            var dto = _mapper.Map<ProductDto>(products);
+
             return Ok(products);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromBody] Product product) 
+        public async Task<IActionResult> AddProduct([FromBody] ProductDto productDto) 
         {
-            if(product == null)
+            if(productDto == null)
                 return BadRequest("Please enter a valid Product!");
+
+            var product = _mapper.Map<Product>(productDto);
 
             await _unitOfWork.Products.AddAsync(product);
             _unitOfWork.Complete();
@@ -66,20 +76,14 @@ namespace API.Controllers
         }
 
         [HttpPut("{productId:int}")]
-        public async Task<IActionResult> DeleteProduct(int productId, [FromBody] Product product)
+        public async Task<IActionResult> UpdateProduct(int productId, [FromBody] ProductDto productDto)
         {
             var currentProduct = await _unitOfWork.Products.GetByIdAsync(productId);
 
             if (currentProduct is null)
                 return NotFound($"Product with id: {productId} was not fount in the context!");
 
-            currentProduct.ProductName = product.ProductName;
-            currentProduct.ProductDescription = product.ProductDescription;
-            currentProduct.ProductPrice = product.ProductPrice;
-            currentProduct.ProductPictureUrl = product.ProductPictureUrl;
-            currentProduct.ProductType = product.ProductType;
-            currentProduct.ProductBrand = product.ProductBrand;
-            currentProduct.ProductQuantityInStock = product.ProductQuantityInStock;
+            var product = _mapper.Map(productDto, currentProduct);
 
             _unitOfWork.Products.Update(currentProduct);
             _unitOfWork.Complete();
