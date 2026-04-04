@@ -49,12 +49,12 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromBody] ProductDto productDto) 
+        public async Task<IActionResult> AddProduct([FromBody] CreateProductDto createProductDto) 
         {
-            if(productDto == null)
+            if(createProductDto == null)
                 return BadRequest("Please enter a valid Product!");
 
-            var product = _mapper.Map<Product>(productDto);
+            var product = _mapper.Map<Product>(createProductDto);
 
             await _unitOfWork.Products.AddAsync(product);
             await _unitOfWork.CompleteAsync();
@@ -78,14 +78,14 @@ namespace API.Controllers
         }
 
         [HttpPut("{productId:int}")]
-        public async Task<IActionResult> UpdateProduct(int productId, [FromBody] ProductDto productDto)
+        public async Task<IActionResult> UpdateProduct(int productId, [FromBody] UpdateProductDto updareProductDto)
         {
             var currentProduct = await _unitOfWork.Products.GetByIdAsync(productId);
 
             if (currentProduct is null)
                 return NotFound($"Product with id: {productId} was not fount in the context!");
 
-            var product = _mapper.Map(productDto, currentProduct);
+            var product = _mapper.Map(updareProductDto, currentProduct);
 
             _unitOfWork.Products.Update(currentProduct);
             await _unitOfWork.CompleteAsync();
