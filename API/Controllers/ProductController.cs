@@ -27,7 +27,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts()
+        public async Task<ActionResult<IReadOnlyCollection<ProductDto>>> GetProducts()
         {
             var products = await _unitOfWork.Products.GetAllAsync();
 
