@@ -16,9 +16,9 @@ public class UnitOfWork : IUnitOfWork
         Products = new GenericRepository<Product>(context);
     }
 
-    public int Complete()
+    public Task<int> CompleteAsync()
     {
-        return _context.SaveChanges();
+        return _context.SaveChangesAsync();
     }
 
     public void Dispose()

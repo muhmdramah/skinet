@@ -8,8 +8,9 @@ using Microsoft.OpenApi.Reader;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/products")] 
     public class ProductController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -44,7 +45,7 @@ namespace API.Controllers
 
             var dto = _mapper.Map<ProductDto>(products);
 
-            return Ok(products);
+            return Ok(dto);
         }
 
         [HttpPost]
@@ -56,9 +57,10 @@ namespace API.Controllers
             var product = _mapper.Map<Product>(productDto);
 
             await _unitOfWork.Products.AddAsync(product);
-            _unitOfWork.Complete();
+            await _unitOfWork.CompleteAsync();
 
-            return Ok($"Product with id: {product.Id} was created successfully!");
+            return CreatedAtAction(nameof(GetProduct), new { productId = product.Id, version = "1.0" }, product);
+            //return Ok($"Product with id: {product.Id} was created successfully!");
         }
 
         [HttpDelete("{productId:int}")]
@@ -70,7 +72,7 @@ namespace API.Controllers
                 return NotFound($"Product with id: {productId} is already not fount in the context!");
 
             _unitOfWork.Products.Delete(currentProduct);
-            _unitOfWork.Complete();
+            await _unitOfWork.CompleteAsync();
 
             return Ok($"Product with id: {productId} deleted successfully!");
         }
@@ -86,7 +88,8 @@ namespace API.Controllers
             var product = _mapper.Map(productDto, currentProduct);
 
             _unitOfWork.Products.Update(currentProduct);
-            _unitOfWork.Complete();
+            await _unitOfWork.CompleteAsync();
+
             return Ok($"Product with id: {productId} updated successfully!");
         }
     }

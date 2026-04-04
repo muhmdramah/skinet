@@ -7,5 +7,5 @@ public interface IUnitOfWork : IDisposable
 {
     public IGenericRepository<Product> Products { get; }
     
-    int Complete();
+    Task<int> CompleteAsync();
 }
