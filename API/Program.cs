@@ -1,4 +1,5 @@
 using API.Filters;
+using API.Helpers.LinkGeneratorHelper;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
@@ -66,6 +67,14 @@ builder.Services.AddApiVersioning(options =>
     // Configure how the version is read (UrlSegment is required for {version} in route)
     options.ApiVersionReader = new UrlSegmentApiVersionReader();
 });
+
+#region Link_Generator_Configuration
+// 1. Allow access to the HTTP Context
+builder.Services.AddHttpContextAccessor();
+
+// 2. Bind the Core interface to the API implementation
+builder.Services.AddTransient<ILinkGeneratorHelper, LinkGeneratorHelper>();
+#endregion
 
 var app = builder.Build();
 
