@@ -28,6 +28,10 @@ namespace API.Helpers.LinkGeneratorHelper
                     endpointName: "GetById", // This must match the Name="" on your Controller endpoint
                     values: new { id = entityId }),
 
+                create = _linkGenerator.GetUriByName(_httpContextAccessor.HttpContext,
+                    endpointName: "Create",
+                    values: new { }),
+
                 update = _linkGenerator.GetUriByName(_httpContextAccessor.HttpContext,
                     endpointName: "Update",
                     values: new { id = entityId }),

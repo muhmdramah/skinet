@@ -58,7 +58,7 @@ namespace API.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "Create")]
         public async Task<IActionResult> AddProduct([FromBody] CreateProductDto createProductDto) 
         {
             if(createProductDto == null)
