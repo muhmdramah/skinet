@@ -40,7 +40,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetById")]
-        public async Task<IActionResult> GetProduct(int id)
+        public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
             var products = await _unitOfWork.Products.GetByIdAsync(id);
 
@@ -59,7 +59,7 @@ namespace API.Controllers
         }
 
         [HttpPost(Name = "Create")]
-        public async Task<IActionResult> AddProduct([FromBody] CreateProductDto createProductDto) 
+        public async Task<ActionResult<CreateProductDto>> AddProduct([FromBody] CreateProductDto createProductDto) 
         {
             if(createProductDto == null)
                 return BadRequest("Please enter a valid Product!");
@@ -74,7 +74,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id:int}", Name = "Delete")]
-        public async Task<IActionResult> DeleteProduct(int id)
+        public async Task<ActionResult> DeleteProduct(int id)
         {
             var currentProduct = await _unitOfWork.Products.GetByIdAsync(id);
 
@@ -88,7 +88,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id:int}", Name = "Update")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductDto updareProductDto)
+        public async Task<ActionResult> UpdateProduct(int id, [FromBody] UpdateProductDto updareProductDto)
         {
             var currentProduct = await _unitOfWork.Products.GetByIdAsync(id);
 
