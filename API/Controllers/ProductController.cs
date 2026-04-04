@@ -69,7 +69,11 @@ namespace API.Controllers
             await _unitOfWork.Products.AddAsync(product);
             await _unitOfWork.CompleteAsync();
 
-            return CreatedAtAction(nameof(GetProduct), new { id = product.Id, version = "1.0" }, product);
+            return CreatedAtAction(nameof(GetProduct), new { id = product.Id, version = "1.0" }, new
+            {
+                Product =  product,
+                Operation = $"Product with id: {product.Id} was created successfully!"
+            });
             //return Ok($"Product with id: {product.Id} was created successfully!");
         }
 
