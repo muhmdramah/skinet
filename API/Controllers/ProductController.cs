@@ -60,7 +60,6 @@ namespace API.Controllers
             await _unitOfWork.CompleteAsync();
 
             return CreatedAtAction(nameof(GetProduct), new { productId = product.Id, version = "1.0" }, product);
-            //return Ok($"Product with id: {product.Id} was created successfully!");
         }
 
         [HttpDelete("{productId:int}")]
@@ -74,7 +73,7 @@ namespace API.Controllers
             _unitOfWork.Products.Delete(currentProduct);
             await _unitOfWork.CompleteAsync();
 
-            return Ok($"Product with id: {productId} deleted successfully!");
+            return NoContent();
         }
 
         [HttpPut("{productId:int}")]
@@ -90,7 +89,7 @@ namespace API.Controllers
             _unitOfWork.Products.Update(currentProduct);
             await _unitOfWork.CompleteAsync();
 
-            return Ok($"Product with id: {productId} updated successfully!");
+            return NoContent();
         }
     }
 }
