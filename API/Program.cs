@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+#region API_Versioning_Configuration
 // 1. Add Versioned Api Explorer
 builder.Services.AddVersionedApiExplorer(options =>
 {
@@ -31,28 +32,6 @@ builder.Services.AddApiVersioning(options => {
 // 2. Adjust SwaggerGen
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-// all manages a database context
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-builder.Services.AddAutoMapper(typeof(ProductMappingProfile).Assembly);
-
-builder.Services.AddControllers(options =>
-{
-    options.Conventions.Add(new RouteTokenTransformerConvention(
-        new PluralizeParameterTransformer()));
-});
-
-// Most professional APIs prefer lowercase URLs. While [controller] uses the class name (e.g., Products),
-// you should ensure your routing configuration in Program.cs is set to lowercase:
-builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-
 builder.Services.AddApiVersioning(options =>
 {
     // Specify the default API version (usually 1.0)
@@ -67,6 +46,37 @@ builder.Services.AddApiVersioning(options =>
     // Configure how the version is read (UrlSegment is required for {version} in route)
     options.ApiVersionReader = new UrlSegmentApiVersionReader();
 });
+#endregion
+
+#region Connection_String_Configuration
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+#endregion
+
+#region Services_Configuration
+// all manages a database context
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+#endregion
+
+#region Mapping_Profiles_Configuration
+builder.Services.AddAutoMapper(typeof(ProductMappingProfile).Assembly);
+#endregion
+
+builder.Services.AddControllers(options =>
+{
+    options.Conventions.Add(new RouteTokenTransformerConvention(
+        new PluralizeParameterTransformer()));
+});
+
+#region Lowercase_URLs_Configuration
+// Most professional APIs prefer lowercase URLs. While [controller] uses the class name (e.g., Products),
+// you should ensure your routing configuration in Program.cs is set to lowercase:
+builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+#endregion
 
 #region Link_Generator_Configuration
 // 1. Allow access to the HTTP Context
