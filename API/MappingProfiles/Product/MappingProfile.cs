@@ -4,9 +4,9 @@ using Core.DTOs.Requests;
 using Core.DTOs.Responses;
 using Core.Entities;
 
-public class MappingProfile : Profile
+public class ProductMappingProfile : Profile
 {
-    public MappingProfile()
+    public ProductMappingProfile()
     {
         CreateMap<Product, ProductResponse>()
             .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Id));
