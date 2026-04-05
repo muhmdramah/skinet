@@ -1,6 +1,8 @@
 ﻿using API.Helpers.LinkGeneratorHelper;
 using AutoMapper;
 using Core.DTOs;
+using Core.DTOs.Requests;
+using Core.DTOs.Responses;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -27,31 +29,31 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyCollection<ProductDto>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyCollection<ProductResponse>>> GetProducts()
         {
             var products = await _unitOfWork.Products.GetAllAsync();
 
             if (!products.Any())
                 return NotFound("There's no products right now... Try again later!");
 
-            var dto = _mapper.Map<List<ProductDto>>(products);
+            var productResponse = _mapper.Map<List<ProductResponse>>(products);
 
-            return Ok(dto);
+            return Ok(productResponse);
         }
 
         [HttpGet("{id:int}", Name = "GetById")]
-        public async Task<ActionResult<ProductDto>> GetProduct(int id)
+        public async Task<ActionResult<ProductResponse>> GetProduct(int id)
         {
             var products = await _unitOfWork.Products.GetByIdAsync(id);
 
             if (products is null)
                 return NotFound($"product with id {id} was not found!");
 
-            var dto = _mapper.Map<ProductDto>(products);
+            var productResponse = _mapper.Map<ProductResponse>(products);
 
             var response = new
             {
-                dto,
+                productResponse,
                 links = _linkGeneratorHelper.GenerateConfirmationUrl(id)
             };
 
@@ -59,12 +61,12 @@ namespace API.Controllers
         }
 
         [HttpPost(Name = "Create")]
-        public async Task<ActionResult<CreateProductDto>> AddProduct([FromBody] CreateProductDto createProductDto) 
+        public async Task<ActionResult<CreateProductRequest>> AddProduct([FromBody] CreateProductRequest createProductRequest) 
         {
-            if(createProductDto == null)
+            if(createProductRequest == null)
                 return BadRequest("Please enter a valid Product!");
 
-            var product = _mapper.Map<Core.Entities.Product>(createProductDto);
+            var product = _mapper.Map<Core.Entities.Product>(createProductRequest);
 
             await _unitOfWork.Products.AddAsync(product);
             await _unitOfWork.CompleteAsync();
@@ -92,14 +94,14 @@ namespace API.Controllers
         }
 
         [HttpPut("{id:int}", Name = "Update")]
-        public async Task<ActionResult> UpdateProduct(int id, [FromBody] UpdateProductDto updareProductDto)
+        public async Task<ActionResult> UpdateProduct(int id, [FromBody] UpdateProductRequest updateProductRequest)
         {
             var currentProduct = await _unitOfWork.Products.GetByIdAsync(id);
 
             if (currentProduct is null)
                 return NotFound($"Product with id: {id} was not fount in the context!");
 
-            var product = _mapper.Map(updareProductDto, currentProduct);
+            var product = _mapper.Map(updateProductRequest, currentProduct);
 
             _unitOfWork.Products.Update(currentProduct);
             await _unitOfWork.CompleteAsync();
