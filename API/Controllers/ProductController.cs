@@ -174,9 +174,8 @@ namespace API.Controllers
         [HttpGet("sorted-by-price")]
         public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductsSortedByPrice
             ([FromQuery, 
-                SwaggerParameter("Sorting option: 'priceAsc' for ascending, 'priceDesc' for descending",
-                    Required = false)] 
-            string? sort)
+                SwaggerParameter("Sorting option: 'priceAsc' for ascending, 'priceDesc' for descending... " +
+                    "No parameter? will sort by name ascending!", Required = false)] string? sort)
         {
             var products = await _productRepository.GetProductsSortedByPriceAsync(sort);
 
