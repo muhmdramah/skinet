@@ -135,5 +135,27 @@ namespace API.Controllers
 
             return Ok(types);
         }
+
+        [HttpGet("brands/{brandName}")]
+        public async Task<ActionResult<IReadOnlyCollection<string>>> GetProductsByBrand(string brandName)
+        {
+            var products = await _productRepository.GetProductsByBrandAsync(brandName);
+
+            if (!products.Any())
+                return NotFound("There's no Products with in this brand right now... Try again later!");
+
+            return Ok(products);
+        }
+
+        [HttpGet("types/{typeName}")]
+        public async Task<ActionResult<IReadOnlyCollection<string>>> GetProductsByType(string typeName)
+        {
+            var products = await _productRepository.GetProductsByTypeAsync(typeName);
+
+            if (!products.Any())
+                return NotFound("There's no Products with in this type right now... Try again later!");
+
+            return Ok(products);
+        }
     }
 }
