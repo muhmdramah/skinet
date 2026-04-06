@@ -31,7 +31,11 @@ builder.Services.AddApiVersioning(options => {
 });
 
 // 2. Adjust SwaggerGen
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    // this is for the XML comments to show up in Swagger UI 
+    c.EnableAnnotations();
+});
 
 builder.Services.AddApiVersioning(options =>
 {

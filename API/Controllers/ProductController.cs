@@ -8,6 +8,7 @@ using Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Reader;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers
 {
@@ -171,7 +172,11 @@ namespace API.Controllers
 
 
         [HttpGet("sorted-by-price")]
-        public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductsSortedByPrice(string? sort)
+        public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductsSortedByPrice
+            ([FromQuery, 
+                SwaggerParameter("Sorting option: 'priceAsc' for ascending, 'priceDesc' for descending",
+                    Required = false)] 
+            string? sort)
         {
             var products = await _productRepository.GetProductsSortedByPriceAsync(sort);
 
