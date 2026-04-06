@@ -142,7 +142,7 @@ namespace API.Controllers
             var products = await _productRepository.GetProductsByBrandAsync(brandName);
 
             if (!products.Any())
-                return NotFound("There's no Products with in this brand right now... Try again later!");
+                return NotFound("There's no Products in this brand right now... Try again later!");
 
             return Ok(products);
         }
@@ -153,7 +153,18 @@ namespace API.Controllers
             var products = await _productRepository.GetProductsByTypeAsync(typeName);
 
             if (!products.Any())
-                return NotFound("There's no Products with in this type right now... Try again later!");
+                return NotFound("There's no Products in this type right now... Try again later!");
+
+            return Ok(products);
+        }
+
+        [HttpGet("specific-brand-and-type")]
+        public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductsByASpecificBrandAndType(string brand, string type)
+        {
+            var products = await _productRepository.GetProductsByASpecificBrandAndTypeAsync(brand, type);
+
+            if (!products.Any())
+                return NotFound("There's no Products with this brand and type right now... Try again later!");
 
             return Ok(products);
         }
