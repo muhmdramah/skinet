@@ -34,4 +34,26 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
 
         return types;
     }
+
+    public async Task<IReadOnlyCollection<Product>> GetProductsByBrandAsync(string brandName)
+    {
+        var normalizedBrandName = brandName.ToLower();
+
+        var products = await _context.Products
+            .Where(p => p.ProductBrand.ToLower() == normalizedBrandName)
+            .ToListAsync();
+
+        return products;
+    }
+
+    public async Task<IReadOnlyCollection<Product>> GetProductsByTypeAsync(string typeName)
+    {
+        var normalizedTypeName = typeName.ToLower();
+
+        var products = await _context.Products
+            .Where(p => p.ProductType.ToLower() == normalizedTypeName)
+            .ToListAsync();
+
+        return products;
+    }
 }
