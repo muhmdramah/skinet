@@ -45,16 +45,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return entity;
     }
 
-    public bool IsExists(int entityId)
-    {
-        var exists = _context.Set<T>().Find(entityId);
-
-        if (exists is not null)
-            return true;
-
-        return false;
-    }
-
     public async Task<int> SaveAsync()
     {
         return await _context.SaveChangesAsync();

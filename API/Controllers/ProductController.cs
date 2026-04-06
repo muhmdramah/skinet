@@ -7,31 +7,36 @@ using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Build.Tasks.Deployment.Bootstrapper;
 using Microsoft.OpenApi.Reader;
 
 namespace API.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/products")] 
+    [Route("api/v{version:apiVersion}/products")]
     public class ProductController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IGenericRepository<Product> _genericRepository;
+        private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
         private readonly ILinkGeneratorHelper _linkGeneratorHelper;
 
-        public ProductController(IUnitOfWork unitOfWork, IMapper mapper, ILinkGeneratorHelper linkGeneratorHelper)
+        public ProductController(IUnitOfWork unitOfWork, IGenericRepository<Product> genericRepository,
+            IProductRepository productRepository,
+            IMapper mapper, ILinkGeneratorHelper linkGeneratorHelper)
         {
             _unitOfWork = unitOfWork;
+            _genericRepository = genericRepository;
+            _productRepository = productRepository;
             _mapper = mapper;
-           _linkGeneratorHelper = linkGeneratorHelper;
+            _linkGeneratorHelper = linkGeneratorHelper;
         }
 
         [HttpGet]
         public async Task<ActionResult<IReadOnlyCollection<ProductResponse>>> GetProducts()
         {
-            var products = await _unitOfWork.Products.GetAllAsync();
+            var products = await _unitOfWork.ProductsGeneric.GetAllAsync();
 
             if (!products.Any())
                 return NotFound("There's no products right now... Try again later!");
@@ -44,7 +49,7 @@ namespace API.Controllers
         [HttpGet("{id:int}", Name = "GetById")]
         public async Task<ActionResult<ProductResponse>> GetProduct(int id)
         {
-            var products = await _unitOfWork.Products.GetByIdAsync(id);
+            var products = await _unitOfWork.ProductsGeneric.GetByIdAsync(id);
 
             if (products is null)
                 return NotFound($"product with id {id} was not found!");
@@ -61,19 +66,19 @@ namespace API.Controllers
         }
 
         [HttpPost(Name = "Create")]
-        public async Task<ActionResult<CreateProductRequest>> AddProduct([FromBody] CreateProductRequest createProductRequest) 
+        public async Task<ActionResult<CreateProductRequest>> AddProduct([FromBody] CreateProductRequest createProductRequest)
         {
-            if(createProductRequest == null)
+            if (createProductRequest == null)
                 return BadRequest("Please enter a valid Product!");
 
-            var product = _mapper.Map<Core.Entities.Product>(createProductRequest);
+            var product = _mapper.Map<Product>(createProductRequest);
 
-            await _unitOfWork.Products.AddAsync(product);
+            await _unitOfWork.ProductsGeneric.AddAsync(product);
             await _unitOfWork.CompleteAsync();
 
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id, version = "1.0" }, new
             {
-                Product =  product,
+                Product = product,
                 Operation = $"Product with id: {product.Id} was created successfully!"
             });
             //return Ok($"Product with id: {product.Id} was created successfully!");
@@ -82,12 +87,12 @@ namespace API.Controllers
         [HttpDelete("{id:int}", Name = "Delete")]
         public async Task<ActionResult> DeleteProduct(int id)
         {
-            var currentProduct = await _unitOfWork.Products.GetByIdAsync(id);
+            var currentProduct = await _unitOfWork.ProductsGeneric.GetByIdAsync(id);
 
             if (currentProduct is null)
                 return NotFound($"Product with id: {id} is already not fount in the context!");
 
-            _unitOfWork.Products.Delete(currentProduct);
+            _unitOfWork.ProductsGeneric.Delete(currentProduct);
             await _unitOfWork.CompleteAsync();
 
             return Ok($"Product with id: {id} deleted successfully!");
@@ -96,17 +101,39 @@ namespace API.Controllers
         [HttpPut("{id:int}", Name = "Update")]
         public async Task<ActionResult> UpdateProduct(int id, [FromBody] UpdateProductRequest updateProductRequest)
         {
-            var currentProduct = await _unitOfWork.Products.GetByIdAsync(id);
+            var currentProduct = await _unitOfWork.ProductsGeneric.GetByIdAsync(id);
 
             if (currentProduct is null)
                 return NotFound($"Product with id: {id} was not fount in the context!");
 
             var product = _mapper.Map(updateProductRequest, currentProduct);
 
-            _unitOfWork.Products.Update(currentProduct);
+            _unitOfWork.ProductsGeneric.Update(currentProduct);
             await _unitOfWork.CompleteAsync();
 
             return Ok($"Product with id: {id} updated successfully!");
+        }
+
+        [HttpGet("brands")]
+        public async Task<ActionResult<IReadOnlyCollection<string>>> GetProductBrands()
+        {
+            var brands = await _productRepository.GetBrandsAsync();
+
+            if (!brands.Any())
+                return NotFound("There's no brands right now... Try again later!");
+
+            return Ok(brands);
+        }
+
+        [HttpGet("types")]
+        public async Task<ActionResult<IReadOnlyCollection<string>>> GetProductTypes()
+        {
+            var types = await _productRepository.GetTypesAsync();
+
+            if (!types.Any())
+                return NotFound("There's no types right now... Try again later!");
+
+            return Ok(types);
         }
     }
 }
