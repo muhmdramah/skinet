@@ -67,13 +67,13 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(typeof(ProductMappingProfile).Assembly);
 #endregion
 
+#region Lowercase_URLs_Configuration
 builder.Services.AddControllers(options =>
 {
     options.Conventions.Add(new RouteTokenTransformerConvention(
         new PluralizeParameterTransformer()));
 });
 
-#region Lowercase_URLs_Configuration
 // Most professional APIs prefer lowercase URLs. While [controller] uses the class name (e.g., Products),
 // you should ensure your routing configuration in Program.cs is set to lowercase:
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
@@ -102,12 +102,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-
+#region Database_Migration_and_Seeding_At_Application_Startup
 try
 {
     using var scope = app.Services.CreateScope();
     var service = scope.ServiceProvider;
-    
+
     var context = service.GetRequiredService<ApplicationDbContext>();
     await context.Database.MigrateAsync();
     await ApplicationDbContextSeed.SeedAsync(context);
@@ -117,6 +117,6 @@ catch (Exception ex)
     Console.WriteLine(ex);
     throw;
 }
-
+#endregion
 
 app.Run();
