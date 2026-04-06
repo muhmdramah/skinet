@@ -168,5 +168,17 @@ namespace API.Controllers
 
             return Ok(products);
         }
+
+
+        [HttpGet("sorted-by-price")]
+        public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductsSortedByPrice(string? sort)
+        {
+            var products = await _productRepository.GetProductsSortedByPriceAsync(sort);
+
+            if (!products.Any())
+                return NotFound("There's no Products right now... Try again later!");
+
+            return Ok(products);
+        }
     }
 }

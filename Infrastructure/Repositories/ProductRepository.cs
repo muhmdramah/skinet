@@ -75,4 +75,18 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
 
         return await query.ToListAsync();
     }
+
+    public async Task<IReadOnlyCollection<Product>> GetProductsSortedByPriceAsync(string sort)
+    {
+        var query = _context.Products.AsQueryable();
+
+        query = sort switch
+        {
+            "priceAsc" => query.OrderBy(product => product.ProductPrice),
+            "priceDesc" => query.OrderByDescending(product => product.ProductPrice),
+            _ => query.OrderBy(product => product.ProductName)
+        };
+
+        return await query.ToListAsync();
+    }
 }
