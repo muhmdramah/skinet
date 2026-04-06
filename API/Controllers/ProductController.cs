@@ -137,7 +137,7 @@ namespace API.Controllers
         }
 
         [HttpGet("brands/{brandName}")]
-        public async Task<ActionResult<IReadOnlyCollection<string>>> GetProductsByBrand(string brandName)
+        public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductsByBrand(string brandName)
         {
             var products = await _productRepository.GetProductsByBrandAsync(brandName);
 
@@ -148,7 +148,7 @@ namespace API.Controllers
         }
 
         [HttpGet("types/{typeName}")]
-        public async Task<ActionResult<IReadOnlyCollection<string>>> GetProductsByType(string typeName)
+        public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductsByType(string typeName)
         {
             var products = await _productRepository.GetProductsByTypeAsync(typeName);
 
