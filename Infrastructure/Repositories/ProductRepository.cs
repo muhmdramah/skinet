@@ -56,4 +56,23 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
 
         return products;
     }
+
+    public async Task<IReadOnlyCollection<Product>> GetProductsByASpecificBrandAndTypeAsync(string brand, string type)
+    {
+        var query = _context.Products.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(brand))
+        {
+            var normalizedBrand = brand.ToLower();
+            query = query.Where(product => product.ProductBrand.ToLower() == normalizedBrand);
+        }
+
+        if (!string.IsNullOrWhiteSpace(type))
+        {
+            var normalizedType = type.ToLower();
+            query = query.Where(product => product.ProductType.ToLower() == normalizedType);
+        }
+
+        return await query.ToListAsync();
+    }
 }
