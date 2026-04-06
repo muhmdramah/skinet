@@ -1,5 +1,6 @@
 using API.Filters;
 using API.Helpers.LinkGeneratorHelper;
+using Core.Entities.SeedData;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
@@ -100,5 +101,22 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+try
+{
+    using var scope = app.Services.CreateScope();
+    var service = scope.ServiceProvider;
+    
+    var context = service.GetRequiredService<ApplicationDbContext>();
+    await context.Database.MigrateAsync();
+    await ApplicationDbContextSeed.SeedAsync(context);
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex);
+    throw;
+}
+
 
 app.Run();
