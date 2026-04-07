@@ -142,6 +142,28 @@ namespace API.Controllers
             return Ok($"Product with id: {id} updated successfully!");
         }
 
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult> UpdateProductPrice(int id, [FromBody] UpdateProductPriceRequest request)
+        {
+            var product = await _unitOfWork.ProductsGeneric.GetByIdAsync(id);
+
+            if (product is null)
+                return NotFound($"Product with id: {id} was not found!");
+
+            //product.ProductPrice = request.ProductPrice;
+             _mapper.Map(request, product);
+
+            _unitOfWork.ProductsGeneric.Update(product);
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(new
+            {
+                Message = $"Product price updated successfully!",
+                ProductId = id,
+                NewPrice = product.ProductPrice
+            });
+        }
+
         [HttpGet("brands")]
         public async Task<ActionResult<IReadOnlyCollection<string>>> GetProductBrands()
         {
