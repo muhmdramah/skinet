@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;
@@ -88,5 +89,19 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
         };
 
         return await query.ToListAsync();
+    }
+
+    public async Task<bool> IsExistByName(string productName)
+    {
+        productName.ToLower();
+
+        var query = _context.Products.Where(product => product.ProductName.ToLower() == productName);
+
+        if(query is null || !await query.AnyAsync())
+        {
+            return false;
+        }
+
+        return true;
     }
 }

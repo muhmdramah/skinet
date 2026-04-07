@@ -11,4 +11,5 @@ public interface IProductRepository : IGenericRepository<Product>
     Task<IReadOnlyCollection<Product>> GetProductsByTypeAsync(string typeName);
     Task<IReadOnlyCollection<Product>> GetProductsByASpecificBrandAndTypeAsync(string brand, string type);
     Task<IReadOnlyCollection<Product>> GetProductsSortedByPriceAsync(string sort);
+    Task<bool> IsExistByName(string productName);
 }

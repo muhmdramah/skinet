@@ -92,6 +92,13 @@ namespace API.Controllers
             if (createProductRequest == null)
                 return BadRequest("Please enter a valid Product!");
 
+            var exists = await _productRepository
+                .IsExistByName(createProductRequest.ProductName.ToLower());
+
+            if (exists is true)
+                return BadRequest($"The product with name '{createProductRequest.ProductName}' is already exists... " +
+                    $"try add another product with different name!");
+
             var product = _mapper.Map<Product>(createProductRequest);
 
             await _unitOfWork.ProductsGeneric.AddAsync(product);
