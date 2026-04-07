@@ -208,7 +208,11 @@ namespace API.Controllers
         [HttpOptions]
         public IActionResult RouteOptions()
         {
-            Response.Headers.Append("Allow", "GET, POST, PUT, DELETE, OPTIONS");
+            List<string> options = new List<string> { "GET", "POST", "PUT", "DELETE", "OPTIONS", "HEADERS" };
+            
+            foreach (var option in options)
+                Response.Headers.Append("Allow", option);
+            
             return NoContent();
         }
 
