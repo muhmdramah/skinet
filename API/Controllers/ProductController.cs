@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Reader;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -51,6 +52,11 @@ namespace API.Controllers
         public async Task<ActionResult<IReadOnlyCollection<ProductResponse>>> GetAllPaged([FromQuery] int page = 1, 
             [FromQuery] int pageSize = 20)
         {
+            // Ensure page is always >= 1
+            // Clamp pageSize between 1 and 100
+            page = Math.Max(1, page);
+            pageSize = Math.Clamp(pageSize, 1, 100);
+
             var products = await _genericRepository.GetPagedAsync(page, pageSize);
 
             if (!products.Any())
