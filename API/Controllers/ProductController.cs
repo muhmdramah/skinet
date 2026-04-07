@@ -47,6 +47,20 @@ namespace API.Controllers
             return Ok(productResponse);
         }
 
+        [HttpGet("paged")]
+        public async Task<ActionResult<IReadOnlyCollection<ProductResponse>>> GetAllPaged([FromQuery] int page = 1, 
+            [FromQuery] int pageSize = 20)
+        {
+            var products = await _genericRepository.GetPagedAsync(page, pageSize);
+
+            if (!products.Any())
+                return NotFound("There's no products right now... Try again later!");
+
+            var productResponse = _mapper.Map<List<ProductResponse>>(products);
+
+            return Ok(productResponse);
+        }
+
         [HttpGet("{id:int}", Name = "GetById")]
         public async Task<ActionResult<ProductResponse>> GetProduct(int id)
         {

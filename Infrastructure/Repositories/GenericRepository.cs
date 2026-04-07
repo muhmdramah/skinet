@@ -54,4 +54,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         return await _context.Set<T>().CountAsync();
     }
+
+    public async Task<IReadOnlyCollection<T>> GetPagedAsync(int page = 1, int pageSize = 10)
+    {
+        var query = await _context.Set<T>()
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return query;
+    }
 }
