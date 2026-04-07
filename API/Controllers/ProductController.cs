@@ -195,11 +195,11 @@ namespace API.Controllers
         [HttpHead]
         public async Task<IActionResult> HeadProducts()
         {
-            var products = await _unitOfWork.ProductsGeneric.GetAllAsync();
+            var products = await _unitOfWork.ProductsGeneric.CountAsync();
 
-            if (products.Any())
+            if (products > 0)
             {
-                Response.Headers.Append("X-Total-Count", products.Count().ToString());
+                Response.Headers.Append("X-Total-Count", products.ToString());
                 return NoContent();
             }
 

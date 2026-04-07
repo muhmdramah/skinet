@@ -9,5 +9,7 @@ public interface IGenericRepository<T> where T : class
     T Update(T entity);
     T Delete(T entity);
 
+    Task<int> CountAsync();
+
     Task<int> SaveAsync();
 }

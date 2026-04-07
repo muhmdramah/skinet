@@ -49,4 +49,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         return await _context.SaveChangesAsync();
     }
+
+    public async Task<int> CountAsync()
+    {
+        return await _context.Set<T>().CountAsync();
+    }
 }
