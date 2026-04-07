@@ -184,5 +184,12 @@ namespace API.Controllers
 
             return Ok(products);
         }
+
+        [HttpOptions]
+        public IActionResult RouteOptions()
+        {
+            Response.Headers.Append("Allow", "GET, POST, PUT, DELETE, OPTIONS");
+            return NoContent();
+        }
     }
 }
