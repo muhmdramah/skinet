@@ -173,7 +173,7 @@ namespace API.Controllers
 
         [HttpGet("sorted-by-price")]
         public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductsSortedByPrice
-            ([FromQuery, 
+            ([FromQuery,
                 SwaggerParameter("Sorting option: 'priceAsc' for ascending, 'priceDesc' for descending... " +
                     "No parameter? will sort by name ascending!", Required = false)] string? sort)
         {
@@ -190,6 +190,31 @@ namespace API.Controllers
         {
             Response.Headers.Append("Allow", "GET, POST, PUT, DELETE, OPTIONS");
             return NoContent();
+        }
+
+        [HttpHead]
+        public async Task<IActionResult> HeadProducts()
+        {
+            var products = await _unitOfWork.ProductsGeneric.GetAllAsync();
+
+            if (products.Any())
+            {
+                Response.Headers.Append("X-Total-Count", products.Count().ToString());
+                return NoContent();
+            }
+
+            return NotFound();
+        }
+
+        [HttpHead("{id:int}")]
+        public async Task<IActionResult> HeadProduct(int id)
+        {
+            var product = await _unitOfWork.ProductsGeneric.GetByIdAsync(id);
+
+            if (product is not null)
+                return Ok();
+
+            return NotFound();
         }
     }
 }
