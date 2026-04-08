@@ -17,6 +17,7 @@ namespace API.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/products")]
+    [Produces("application/json", "application/xml")]
     public class ProductController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;

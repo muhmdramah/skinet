@@ -14,15 +14,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers()
-    .AddNewtonsoftJson(options =>
-    {
-        options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-    })
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    });
+builder.Services.AddControllers(options =>
+{
+    // This ensures that if the client requests a media type that the API doesn't support, it will return a 406 Not Acceptable response.
+    // This is important for APIs that want to strictly enforce content negotiation and ensure clients are aware of unsupported media types.
+    // only we support application/json, application/xml
+    options.ReturnHttpNotAcceptable = true; 
+})
+.AddXmlSerializerFormatters() // adds support for XML input and output
+.AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+})
+.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+});
 
 builder.Services.AddEndpointsApiExplorer();
 
