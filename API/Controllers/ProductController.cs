@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Reader;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
+using System.Text;
 
 namespace API.Controllers
 {
@@ -232,6 +233,30 @@ namespace API.Controllers
                 return NotFound("There's no Products right now... Try again later!");
 
             return Ok(products);
+        }
+
+        [HttpGet("csv")]
+        public async Task<IActionResult> ExportProductsToCsv()
+        {
+            // retrieve all products from the database
+            var products = await _genericRepository.GetAllAsync();
+
+            // build the CSV content (name of columns)
+            var csvBuilder = new StringBuilder();
+            csvBuilder.AppendLine("Product Id,Product Name,Product Description,Product Price,Product Brand," +
+                "Product Type,Product Quantity In Stock, Product Picture Url");
+
+            // append each product as a new line in the CSV
+            foreach (var product in products)
+                csvBuilder.AppendLine($"{product.Id},{product.ProductName},{product.ProductDescription}," +
+                    $"{product.ProductPrice},{product.ProductBrand},{product.ProductType}," +
+                    $"{product.ProductQuantityInStock},{product.ProductPictureUrl}");
+
+            // convert the CSV content to a byte array and return it as a file download
+            var fileBytes = Encoding.UTF8.GetBytes(csvBuilder.ToString());
+
+            // set the content type to "text/csv" and specify a filename for the downloaded file
+            return File(fileBytes, "text/csv", "products.csv");
         }
 
         [HttpOptions]
