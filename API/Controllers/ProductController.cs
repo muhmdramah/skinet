@@ -106,7 +106,7 @@ namespace API.Controllers
 
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id, version = "1.0" }, new
             {
-                Product = product,
+                Product = createProductRequest,
                 Operation = $"Product with id: {product.Id} was created successfully!"
             });
             //return Ok($"Product with id: {product.Id} was created successfully!");
@@ -187,7 +187,7 @@ namespace API.Controllers
         }
 
         [HttpGet("brands/{brandName}")]
-        public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductsByBrand(string brandName)
+        public async Task<ActionResult<IReadOnlyCollection<ProductResponse>>> GetProductsByBrand(string brandName)
         {
             var products = await _productRepository.GetProductsByBrandAsync(brandName);
 
@@ -198,7 +198,7 @@ namespace API.Controllers
         }
 
         [HttpGet("types/{typeName}")]
-        public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductsByType(string typeName)
+        public async Task<ActionResult<IReadOnlyCollection<ProductResponse>>> GetProductsByType(string typeName)
         {
             var products = await _productRepository.GetProductsByTypeAsync(typeName);
 
@@ -209,7 +209,7 @@ namespace API.Controllers
         }
 
         [HttpGet("specific-brand-and-type")]
-        public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductsByASpecificBrandAndType(string brand, string type)
+        public async Task<ActionResult<IReadOnlyCollection<ProductResponse>>> GetProductsByASpecificBrandAndType(string brand, string type)
         {
             var products = await _productRepository.GetProductsByASpecificBrandAndTypeAsync(brand, type);
 
@@ -221,7 +221,7 @@ namespace API.Controllers
 
 
         [HttpGet("sorted-by-price")]
-        public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductsSortedByPrice
+        public async Task<ActionResult<IReadOnlyCollection<ProductResponse>>> GetProductsSortedByPrice
             ([FromQuery,
                 SwaggerParameter("Sorting option: 'priceAsc' for ascending, 'priceDesc' for descending... " +
                     "No parameter? will sort by name ascending!", Required = false)] string? sort)
