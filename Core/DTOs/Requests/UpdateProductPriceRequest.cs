@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core.DTOs.Requests
 {
-    public class UpdateProductPriceRequest
+    public record UpdateProductPriceRequest
     {
         public decimal ProductPrice { get; set; }
     }

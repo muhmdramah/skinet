@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core.DTOs
 {
-    public class ProductDto
+    public record ProductDto
     {
         public required string ProductName { get; set; }
         public required string ProductDescription { get; set; }

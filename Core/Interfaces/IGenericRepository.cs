@@ -1,7 +1,9 @@
 
+using Core.Entities;
+
 namespace Core.Interfaces;
 
-public interface IGenericRepository<T> where T : class
+public interface IGenericRepository<T> where T : BaseEntity
 {
     Task<IReadOnlyCollection<T>> GetAllAsync();
     Task<T> GetByIdAsync(int id);

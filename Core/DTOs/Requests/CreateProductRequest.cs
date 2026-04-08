@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core.DTOs.Requests
 {
-    public class CreateProductRequest
+    public record CreateProductRequest
     {
         public required string ProductName { get; set; }
         public required string ProductDescription { get; set; }
