@@ -1,5 +1,6 @@
 using API.Filters;
 using API.Helpers.LinkGeneratorHelper;
+using API.Services_Registrations;
 using Core.Entities.SeedData;
 using Core.Interfaces;
 using Infrastructure.Data;
@@ -19,7 +20,8 @@ builder.Services.AddControllers(options =>
     // This ensures that if the client requests a media type that the API doesn't support, it will return a 406 Not Acceptable response.
     // This is important for APIs that want to strictly enforce content negotiation and ensure clients are aware of unsupported media types.
     // only we support application/json, application/xml
-    options.ReturnHttpNotAcceptable = true; 
+    options.ReturnHttpNotAcceptable = true;
+    options.Filters.Add(typeof(MainResponseResultFilter));
 })
 //.AddXmlSerializerFormatters() // adds support for XML input and output
 .AddNewtonsoftJson(options =>
@@ -41,7 +43,8 @@ builder.Services.AddVersionedApiExplorer(options =>
     options.SubstituteApiVersionInUrl = true; // THIS FIXES THE {version} IN SWAGGER
 });
 
-builder.Services.AddApiVersioning(options => {
+builder.Services.AddApiVersioning(options =>
+{
     options.ReportApiVersions = true;
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -79,9 +82,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 #region Services_Configuration
 // all manages a database context
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddApplicationServices();
 #endregion
 
 #region Mapping_Profiles_Configuration
