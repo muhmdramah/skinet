@@ -22,6 +22,7 @@ builder.Services.AddControllers(options =>
     // only we support application/json, application/xml
     options.ReturnHttpNotAcceptable = true;
     options.Filters.Add(typeof(MainResponseResultFilter));
+    options.Filters.Add(typeof(GlobalExceptionFilter));
 })
 //.AddXmlSerializerFormatters() // adds support for XML input and output
 .AddNewtonsoftJson(options =>

@@ -1,4 +1,5 @@
-﻿using API.Helpers.LinkGeneratorHelper;
+﻿using API.Filters;
+using API.Helpers.LinkGeneratorHelper;
 using AutoMapper;
 using Core.DTOs;
 using Core.DTOs.Requests;
