@@ -1,3 +1,4 @@
+using API.Exceptions;
 using API.Filters;
 using API.Helpers.LinkGeneratorHelper;
 using API.Services_Registrations;
@@ -35,6 +36,8 @@ builder.Services.AddControllers(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 #region API_Versioning_Configuration
 // 1. Add Versioned Api Explorer
