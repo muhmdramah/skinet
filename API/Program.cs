@@ -119,6 +119,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseExceptionHandler("/error-development");
+}
+
+// if production, we don't want to show the detailed error page,
+// instead we want to show a custom error page that we will create in the future
+if (app.Environment.IsProduction())
+{
+    app.UseExceptionHandler("/error");
 }
 
 app.UseAuthorization();
