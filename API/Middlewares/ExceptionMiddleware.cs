@@ -21,7 +21,7 @@ namespace API.Middlewares
         private static async Task HandleExceptionAsync(HttpContext context, Exception ex, IHostEnvironment environment)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
             var response = environment.IsDevelopment()
                 ? new ApiErrorResponse(context.Response.StatusCode, ex.Message, ex.StackTrace?.ToString() ?? "")
