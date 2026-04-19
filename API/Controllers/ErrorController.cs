@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -28,7 +27,7 @@ namespace API.Controllers
         [Route("error-development")]
         public IActionResult HandleErrorDevelopment([FromServices] IHostEnvironment environment)
         {
-            if(environment.IsProduction())
+            if (environment.IsProduction())
             {
                 return NotFound();
             }

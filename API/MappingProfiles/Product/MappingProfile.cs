@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Core.DTOs;
 using Core.DTOs.Requests;
 using Core.DTOs.Responses;
 using Core.Entities;

@@ -1,16 +1,11 @@
-﻿using API.Filters;
-using API.Helpers.LinkGeneratorHelper;
+﻿using API.Helpers.LinkGeneratorHelper;
 using AutoMapper;
-using Core.DTOs;
 using Core.DTOs.Requests;
 using Core.DTOs.Responses;
 using Core.Entities;
 using Core.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Reader;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Security.Claims;
 using System.Text;
 
 namespace API.Controllers
@@ -52,7 +47,7 @@ namespace API.Controllers
         }
 
         [HttpGet("paged")]
-        public async Task<ActionResult<IReadOnlyCollection<ProductResponse>>> GetAllPaged([FromQuery] int page = 1, 
+        public async Task<ActionResult<IReadOnlyCollection<ProductResponse>>> GetAllPaged([FromQuery] int page = 1,
             [FromQuery] int pageSize = 20)
         {
             // Ensure page is always >= 1
@@ -154,7 +149,7 @@ namespace API.Controllers
                 return NotFound($"Product with id: {id} was not found!");
 
             //product.ProductPrice = request.ProductPrice;
-             _mapper.Map(request, product);
+            _mapper.Map(request, product);
 
             _unitOfWork.ProductsGeneric.Update(product);
             await _unitOfWork.CompleteAsync();
@@ -265,10 +260,10 @@ namespace API.Controllers
         public IActionResult RouteOptions()
         {
             List<string> options = new List<string> { "GET", "POST", "PUT", "DELETE", "OPTIONS", "HEADERS" };
-            
+
             foreach (var option in options)
                 Response.Headers.Append("Allow", option);
-            
+
             return NoContent();
         }
 

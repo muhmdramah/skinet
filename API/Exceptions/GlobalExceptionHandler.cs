@@ -17,7 +17,7 @@ namespace API.Exceptions
 
         public async ValueTask<bool> TryHandleAsync(
             HttpContext httpContext,
-            Exception exception, 
+            Exception exception,
             CancellationToken cancellationToken)
         {
             httpContext.Response.StatusCode = exception switch
@@ -39,7 +39,7 @@ namespace API.Exceptions
                 }
             };
 
-            return await _problemDetailsService.TryWriteAsync(problemDetailsContext); 
+            return await _problemDetailsService.TryWriteAsync(problemDetailsContext);
         }
     }
 }

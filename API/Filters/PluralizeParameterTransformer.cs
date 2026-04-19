@@ -1,13 +1,13 @@
 ﻿namespace API.Filters
 {
-    using Microsoft.AspNetCore.Routing;
     using Humanizer; // Add the Humanizer NuGet package
+    using Microsoft.AspNetCore.Routing;
 
     public class PluralizeParameterTransformer : IOutboundParameterTransformer
     {
         public string? TransformOutbound(object? value)
         {
-            if (value == null) 
+            if (value == null)
                 return null;
 
             // Pluralize the controller name (e.g., Product -> products)

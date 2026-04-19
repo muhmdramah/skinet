@@ -1,7 +1,4 @@
-﻿using Core.Interfaces;
-using Microsoft.EntityFrameworkCore;
-
-namespace API.Helpers.LinkGeneratorHelper
+﻿namespace API.Helpers.LinkGeneratorHelper
 {
     public class LinkGeneratorHelper : ILinkGeneratorHelper
     {
