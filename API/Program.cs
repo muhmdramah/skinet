@@ -2,7 +2,9 @@ using API.Exceptions;
 using API.Filters;
 using API.Helpers.LinkGeneratorHelper;
 using API.Services_Registrations;
+using API.Validators;
 using Core.Entities.SeedData;
+using FluentValidation;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -36,6 +38,8 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProductRequestValidator>();
 
 #region API_Versioning_Configuration
 // 1. Add Versioned Api Explorer
