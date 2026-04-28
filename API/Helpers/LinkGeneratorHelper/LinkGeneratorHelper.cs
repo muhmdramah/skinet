@@ -19,7 +19,7 @@
                 return string.Empty; // Handle background task scenarios where HTTP context is null
 
             // Generates an absolute URL (e.g., https://skinet.com/api/orders/5)
-            var context = _httpContextAccessor.HttpContext;
+            var context = _httpContextAccessor.HttpContext!;
             return new
             {
                 self = _linkGenerator.GetUriByName(context,

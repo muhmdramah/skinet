@@ -224,7 +224,7 @@ namespace API.Controllers
                 SwaggerParameter("Sorting option: 'priceAsc' for ascending, 'priceDesc' for descending... " +
                     "No parameter? will sort by name ascending!", Required = false)] string? sort)
         {
-            var products = await _productRepository.GetProductsSortedByPriceAsync(sort);
+            var products = await _productRepository.GetProductsSortedByPriceAsync(sort!);
 
             if (!products.Any())
                 return NotFound("There's no Products right now... Try again later!");
