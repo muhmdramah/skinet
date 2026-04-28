@@ -37,6 +37,7 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateProductRequestValidator>();
@@ -115,7 +116,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<ILinkGeneratorHelper, LinkGeneratorHelper>();
 #endregion
 
-var app = builder.Build();
+    var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
@@ -139,20 +140,20 @@ app.UseAuthorization();
 app.MapControllers();
 
 #region Database_Migration_and_Seeding_At_Application_Startup
-try
-{
-    using var scope = app.Services.CreateScope();
-    var service = scope.ServiceProvider;
+//try
+//{
+//    using var scope = app.Services.CreateScope();
+//    var service = scope.ServiceProvider;
 
-    var context = service.GetRequiredService<ApplicationDbContext>();
-    await context.Database.MigrateAsync();
-    await ApplicationDbContextSeed.SeedAsync(context);
-}
-catch (Exception ex)
-{
-    Console.WriteLine(ex);
-    throw;
-}
+//    var context = service.GetRequiredService<ApplicationDbContext>();
+//    await context.Database.MigrateAsync();
+//    await ApplicationDbContextSeed.SeedAsync(context);
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine(ex);
+//    throw;
+//}
 #endregion
 
 app.Run();
