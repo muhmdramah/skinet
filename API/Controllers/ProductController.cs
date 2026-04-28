@@ -34,15 +34,6 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-        [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
-        [EndpointName("GetProducts")]
-        [EndpointSummary("Retrieves all products.")]
-        [EndpointDescription("This endpoint retrieves all products from the database.")]
-
         public async Task<ActionResult<IReadOnlyCollection<ProductResponse>>> GetProducts()
         {
             var products = await _unitOfWork.ProductsGeneric.GetAllAsync();
