@@ -39,6 +39,8 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+builder.Services.AddProblemDetails();
+
 #region API_Versioning_Configuration
 // 1. Add Versioned Api Explorer
 builder.Services.AddVersionedApiExplorer(options =>
